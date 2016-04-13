@@ -1,0 +1,443 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<h:form id="sorderadd_form" enctype="multipart/form-data"
+			style="background-color:rgba(39, 171, 255, 0.09);">
+			<p:growl id="sorderadd_grow" showDetail="true" sticky="false"
+				showSummary="false" life="60000" />
+			<p:panel id="sorderadd_sformContainer"
+				style="opcity:0;  width:100%; background-color:rgba(39, 171, 255, 0.00); padding:0px; margin:0px;"
+				header="Add/Edit Customer Orders #{SOrderCtrl.sorder.formatedSeqId}">
+				<div class="ui-fluid">
+					<p:panelGrid
+						style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px; spacing:10px;">
+
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Customer Name: " for="a_customerName"
+									style="">
+									<br></br>
+
+
+									<p:autoComplete value="#{SOrderCtrl.sorder}"
+										id="a_customerName"
+										completeMethod="#{SOrderCtrl.completeCustomerName}"
+										var="sorder" itemLabel="#{sorder.customerName}"
+										itemValue="#{sorder}" converter="sorderConverter">
+										<f:facet name="itemtip">
+											<h:panelGrid columns="2" cellpadding="5">
+												<f:facet name="header">
+													<h:outputText value="#{sorder.customerName}"
+														style="margin-left:50px" />
+												</f:facet>
+
+												<h:outputText value="Contact: " />
+												<h:outputText value="#{sorder.contact1}" />
+
+												<h:outputText value="Value: " />
+												<h:outputText value="#{sorder.totalValue}" />
+
+												<h:outputText value="Status: " />
+												<h:outputText value="#{sorder.sorderStatus.key}" />
+											</h:panelGrid>
+										</f:facet>
+
+										<p:ajax event="itemSelect"
+											listener="#{SOrderCtrl.selectSorder}"
+											update="sorderadd_sformContainer" />
+									</p:autoComplete>
+
+
+								</p:outputLabel>
+
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Contact: " for="a_contact" style="">
+									<br></br>
+									<p:inputText id="a_contact"
+										rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.contact1}" required="true">
+
+									</p:inputText>
+									<p:outputLabel
+										value="#{SOrderCtrl.sorder.contact1} #{SOrderCtrl.displayMode}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Status: " for="a_status">
+									<br></br>
+									<p:selectOneMenu id="a_status"
+										rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.sorderStatus}" label="Status"
+										converter="omnifaces.SelectItemsConverter"
+										panelStyle="width:250px">
+										<p:ajax event="change"></p:ajax>
+										<f:selectItems value="#{lovsCtrl.sorderStatusMap.entrySet()}"
+											var="entry" itemValue="#{entry.value}"
+											itemLabel="#{entry.key}" />
+									</p:selectOneMenu>
+									<p:outputLabel value="#{SOrderCtrl.sorder.sorderStatus.key}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;"
+							rendered="#{SOrderCtrl.detailsShowed}">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Contact 2: " for="a_contact2">
+									<br></br>
+									<p:inputText id="a_contact2"
+										rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.contact2}">
+									</p:inputText>
+									<p:outputLabel value="#{SOrderCtrl.sorder.contact2}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Location: " for="a_location" style="">
+									<br></br>
+									<p:inputText id="a_location"
+										rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.location}">
+
+									</p:inputText>
+									<p:outputLabel value="#{SOrderCtrl.sorder.location}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Creation Date: " for="a_cdate">
+									<br></br>
+									<p:calendar id="a_cdate" rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.creation_Date}" disabled="true" />
+									<p:outputLabel value="#{SOrderCtrl.sorder.creation_Date}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;"
+							rendered="#{SOrderCtrl.detailsShowed}">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Delivery Type: " for="a_dtype">
+									<br></br>
+									<p:selectOneMenu id="a_dtype"
+										rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.deliveryTypeBean}"
+										label="Delivery Type"
+										converter="omnifaces.SelectItemsConverter"
+										panelStyle="width:250px">
+										<p:ajax event="change" update="sorderadd_sformContainer" listener="#{SOrderCtrl.nothing}"></p:ajax>
+										<f:selectItems value="#{lovsCtrl.deliveryTypeMap.entrySet()}"
+											var="entry" itemValue="#{entry.value}"
+											itemLabel="#{entry.key}" />
+									</p:selectOneMenu>
+									<p:outputLabel
+										value="#{SOrderCtrl.sorder.deliveryTypeBean.key}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Delivery Cost: " for="a_dcost" style=""
+									rendered="#{SOrderCtrl.deliverCostRequired}">
+									<br></br>
+									<p:inputText id="a_dcost"
+										value="#{SOrderCtrl.sorder.deliveryCost}">
+
+									</p:inputText>
+									<p:outputLabel value="#{SOrderCtrl.sorder.deliveryCost}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							</p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;"
+							rendered="#{SOrderCtrl.detailsShowed}">
+							<p:column colspan="3"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Comment: " for="a_comment">
+									<br></br>
+									<p:inputTextarea id="a_comment"
+										rendered="#{SOrderCtrl.displayMode>1}"
+										value="#{SOrderCtrl.sorder.comment}"
+										style="height:70px; max-height:150px;" scrollHeight="150"
+										autoResize="false" cols="100" rows="4">
+									</p:inputTextarea>
+
+									<p:outputLabel value="#{SOrderCtrl.sorder.comment}"
+										rendered="#{SOrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column colspan="1"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="# Items: ">
+									<br></br>
+
+									<p:outputLabel value="#{SOrderCtrl.sorder.noItems}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+							</p:column>
+							<p:column colspan="1"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Value (SAR): ">
+									<br></br>
+
+									<p:outputLabel value="#{SOrderCtrl.sorder.totalValue}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+							</p:column>
+
+
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Discount: ">
+									<br></br>
+									<p:outputLabel value="#{SOrderCtrl.sorder.totalDiscount}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:commandButton value="Edit Order" id="edit_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-edit"
+									actionListener="#{SOrderCtrl.moveToEditMode()}"
+									update="sorderadd_form" partialSubmit="true"
+									onstart="blockUIWidget1.block()" style="width:120px"
+									oncomplete="blockUIWidget1.unblock()"
+									rendered="#{SOrderCtrl.displayMode==1}">
+								</p:commandButton>
+
+								<p:commandButton value="Add Item" id="add_item_btn"
+									icon="ui-icon-basket" styleClass="ui-priority-primary"
+									style="width:120px"
+									actionListener="#{SOrderCtrl.moveItemToAddMode()}"
+									rendered="#{SOrderCtrl.displayMode != 3}" process="@this">
+									<p:ajax event="dialogReturn" listener="#{SOrderCtrl.saveSitem}"
+										update="sorderadd_sformContainer" />
+								</p:commandButton>
+
+
+							</p:column>
+
+							<p:column style="border:0px;  background-color:inherit;">
+								<p:commandButton id="printit" value="Print" type="button"
+									icon="icn-print" rendered="#{SOrderCtrl.displayMode==1}">
+									<p:printer target="sorderadd_sformContainer" />
+								</p:commandButton>
+								<p:selectBooleanCheckbox value="#{SOrderCtrl.detailsShowed}"> Show Details
+									<p:ajax update="sorderadd_sformContainer" />
+								</p:selectBooleanCheckbox>
+							</p:column>
+							<p:column style="border:0px;  background-color:inherit;">
+								<p:commandButton value="Save Order" id="save_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-floppy"
+									actionListener="#{SOrderCtrl.saveSorder()}"
+									update="sorderadd_form" partialSubmit="true"
+									onstart="blockUIWidget1.show();" style="width:120px"
+									oncomplete="blockUIWidget1.hide();"
+									rendered="#{SOrderCtrl.displayMode>1}">
+								</p:commandButton>
+								<p:commandButton value="New Customer Order!" id="new_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-plus"
+									actionListener="#{SOrderCtrl.moveToNewOrderMode()}"
+									update="sorderadd_form" process="@this"  ajax="true"
+									 style="width:180px"
+									 />
+
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+				</div>
+				<p:spacer height="5" title="Order Items "></p:spacer>
+				<ui:repeat value="#{SOrderCtrl.sorder.sitems}" var="item">
+					<p:panelGrid
+						style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+						<p:row style="border:0px;  background-color:inherit;"
+							id="items_grid">
+							<p:column rowspan="5"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:graphicImage value="#{SOrderCtrl.steamedItemImage}"
+									height="100" cache="false" width="100">
+									<f:param id="itemId" name="itemId" value="#{item.pitem_seqId}" />
+								</p:graphicImage>
+							</p:column>
+
+							<p:column colspan="2"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="Item Name: " />
+								<h:outputText
+									value="#{item.pitem.name} (#{item.pitem.formatedSeqId})"
+									style="font-weight:bold;" />
+							</p:column>
+							<p:column width="30"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="Value: " />
+								<h:outputText value="#{item.pitem.sellingValue} SAR"
+									style="font-weight:bold;" />
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="Stock: " />
+								<h:outputText value="#{item.pitem.quantityInStock} "
+									style="font-weight:bold;" />
+							</p:column>
+							<p:column width="30"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="Quantity: " />
+								<h:outputText value="#{item.quantity}" style="font-weight:bold;" />
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="Total Discount: " />
+								<h:outputText value="#{item.discount} SAR"
+									style="font-weight:bold;" />
+							</p:column>
+							<p:column width="30"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column colspan="2"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="Total Value: " />
+								<h:outputText value="#{item.totalValue}" />
+							</p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column colspan="2"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<h:outputText value="comment: " />
+								<h:outputText value="#{item.comment}" />
+							</p:column>
+							<p:column width="30">
+								<p:commandButton icon="ui-icon-pencil"
+									action="#{SOrderCtrl.nothing }"
+									style="width:25px; height:25px;"
+									oncomplete="PF('itemEDialog').show()" process="@this"
+									update=":edit_sitem:itemEDetail">
+									<f:setPropertyActionListener value="#{item}"
+										target="#{SOrderCtrl.selectedItemForEdit}" />
+
+								</p:commandButton>
+
+								<p:commandButton id="dddddddd" icon="ui-icon-scissors"
+									oncomplete="PF('groupDeleteConfirm').show()"
+									style="width:25px; height:25px;" process="@this"
+									action="#{SOrderCtrl.nothing }">
+									<f:setPropertyActionListener value="#{item}"
+										target="#{SOrderCtrl.selectedItemForDelete}" />
+
+								</p:commandButton>
+								<p:confirmDialog
+									message="Are you sure about deleting this item?"
+									showEffect="fade" appendTo="@(body)" hideEffect="explode"
+									widgetVar="groupDeleteConfirm">
+									<p:commandButton  value="Yes"
+										action="#{SOrderCtrl.deleteItemFromOrder}"  process="@this"
+										oncomplete="PF('groupDeleteConfirm').hide()"
+										update=":sorderadd_form:sorderadd_sformContainer" />
+									<p:commandButton  value="No"
+										oncomplete="PF('groupDeleteConfirm').hide()"  process="@this"/>
+								</p:confirmDialog>
+
+							</p:column>
+						</p:row>
+					</p:panelGrid>
+					<hr />
+				</ui:repeat>
+
+
+
+			</p:panel>
+		</h:form>
+		<p:dialog header="Item Details" widgetVar="itemEDialog" modal="true"
+			showEffect="fade" hideEffect="fade" resizable="false"
+			appendTo="@(body)">
+			<h:form id="edit_sitem">
+				<p:outputPanel id="itemEDetail" style="text-align:center;">
+					<p:panelGrid columns="2"
+						rendered="#{not empty SOrderCtrl.selectedItemForEdit}"
+						columnClasses="label,value">
+						<f:facet name="header">
+							<p:graphicImage value="#{SOrderCtrl.steamedItemImage}"
+								height="100" cache="false" width="100">
+								<f:param id="itemId" name="itemId"
+									value="#{SOrderCtrl.selectedItemForEdit.seqId}" />
+							</p:graphicImage>
+						</f:facet>
+
+						<h:outputText value="Quantity: " />
+						<p:spinner value="#{SOrderCtrl.selectedItemForEdit.quantity}"
+							min="0"
+							max="#{SOrderCtrl.selectedItemForEdit.pitem.quantityInStock + SOrderCtrl.selectedItemForEdit.quantity}">
+
+						</p:spinner>
+
+						<h:outputText value="Discount: " />
+						<p:inputText value="#{SOrderCtrl.selectedItemForEdit.discount}" />
+
+						<h:outputText value="Comment: " />
+						<p:inputTextarea value="#{SOrderCtrl.selectedItemForEdit.comment}"
+							style="height:70px; max-height:150px;" scrollHeight="150"
+							autoResize="false" cols="100" rows="4">
+						</p:inputTextarea>
+						<p:commandButton update=":sorderadd_form:sorderadd_sformContainer"
+							oncomplete="PF('itemEDialog').hide()" title="Save changes"
+							value="Save" actionListener="#{SOrderCtrl.saveEditItem}">
+
+						</p:commandButton>
+
+					</p:panelGrid>
+				</p:outputPanel>
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

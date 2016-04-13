@@ -1,0 +1,385 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:o="http://omnifaces.org/ui" template="/templates/template.xhtml">
+	<ui:define name="content">
+		<h:form id="porderadd_form" enctype="multipart/form-data"
+			style="background-color:rgba(39, 171, 255, 0.09);">
+			<p:growl id="porderadd_grow" showDetail="true" sticky="false"
+				showSummary="false" life="60000" />
+			<p:panel id="porderadd_sformContainer"
+				style="opcity:0;  width:100%; background-color:rgba(39, 171, 255, 0.00); padding:0px; margin:0px;"
+				header="Add/Edit Purchased Orders #{POrderCtrl.porder.formatedSeqId}">
+				<div class="ui-fluid">
+					<p:panelGrid
+						style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px; spacing:10px;">
+
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Order Id: " for="a_orderId" style="">
+									<br></br>
+									<p:inputText id="a_orderId" style="width:90%"
+										value="#{POrderCtrl.porder.orderId}" required="true">
+
+									</p:inputText>
+									<p:commandButton actionListener="#{POrderCtrl.selectPorder()}"
+										update="porderadd_sformContainer"
+										rendered="#{POrderCtrl.displayMode==1 || POrderCtrl.displayMode==3}"
+										icon="ui-icon-search" title="Select an exist purchased order"
+										style="width:25px; height:25px; vertical-align: middle;"></p:commandButton>
+
+								</p:outputLabel>
+
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Site: " for="a_site" style="">
+									<br></br>
+									<p:selectOneMenu id="a_site" value="#{POrderCtrl.porder.site}"
+										rendered="#{POrderCtrl.displayMode>1}" required="true"
+										label="Site" panelStyle="width:250px"
+										converter="omnifaces.SelectItemsConverter">
+										<f:selectItems value="#{lovsCtrl.siteMap.entrySet()}"
+											var="entry" itemValue="#{entry.value}"
+											itemLabel="#{entry.key}" />
+										<p:ajax event="change"></p:ajax>
+									</p:selectOneMenu>
+									<p:outputLabel value="#{POrderCtrl.porder.site.key}"
+										rendered="#{POrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Status: " for="a_status">
+									<br></br>
+									<p:selectOneMenu id="a_status"
+										rendered="#{POrderCtrl.displayMode>1}"
+										value="#{POrderCtrl.porder.porderStatus}" label="Status"
+										converter="omnifaces.SelectItemsConverter"
+										panelStyle="width:250px">
+										<p:ajax event="change"></p:ajax>
+										<f:selectItems value="#{lovsCtrl.POrderStatusMap.entrySet()}"
+											var="entry" itemValue="#{entry.value}"
+											itemLabel="#{entry.key}" />
+									</p:selectOneMenu>
+									<p:outputLabel value="#{POrderCtrl.porder.porderStatus.key}"
+										rendered="#{POrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+						</p:row>
+
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column colspan="1"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Value: " for="a_value">
+									<p:outputLabel value="#{POrderCtrl.SARValue}" id="a_sar_value"
+										style="color:blue;" />
+									<br></br>
+									<p:inputText id="a_value" value="#{POrderCtrl.porder.value}"
+										rendered="#{POrderCtrl.displayMode>1}">
+										<p:ajax event="keyup" update="a_sar_value" />
+									</p:inputText>
+									<p:outputLabel value="#{POrderCtrl.porder.value}"
+										style="font-weight:bold; font-size:small;"
+										rendered="#{POrderCtrl.displayMode==1}" />
+								</p:outputLabel>
+							</p:column>
+							<p:column colspan="1"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="EFC: " for="a_efc">
+
+									<br></br>
+									<p:inputText id="a_efc" value="#{POrderCtrl.porder.EFC}"
+										rendered="#{POrderCtrl.displayMode>1}">
+										<p:ajax event="keyup" update="a_sar_value" />
+									</p:inputText>
+									<p:outputLabel value="#{POrderCtrl.porder.EFC}"
+										style="font-weight:bold; font-size:small;"
+										rendered="#{POrderCtrl.displayMode==1}" />
+								</p:outputLabel>
+							</p:column>
+							<p:column colspan="1"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Currency: " for="a_currency">
+									<br></br>
+									<p:selectOneMenu id="a_currency"
+										rendered="#{POrderCtrl.displayMode>1}"
+										value="#{POrderCtrl.porder.currencyBean}" label="Status"
+										panelStyle="width:80px"
+										converter="omnifaces.SelectItemsConverter">
+										<f:selectItems value="#{lovsCtrl.currencyMap.entrySet()}"
+											var="entry" itemValue="#{entry.value}"
+											itemLabel="#{entry.key}" />
+										<p:ajax event="change" update="a_sar_value"
+											listener="#{POrderCtrl.adjustPorderCurrency}" />
+									</p:selectOneMenu>
+									<p:outputLabel value="#{POrderCtrl.porder.currencyBean.key}"
+										rendered="#{POrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column colspan="2" rowspan="2"
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Comments: " for="a_comment">
+									<br></br>
+									<p:inputTextarea id="a_comment"
+										rendered="#{POrderCtrl.displayMode>1}"
+										value="#{POrderCtrl.porder.comment}"
+										style="height:70px; max-height:150px;" scrollHeight="150"
+										autoResize="false" cols="100" rows="4">
+									</p:inputTextarea>
+									<p:outputLabel value="#{POrderCtrl.porder.comment}"
+										rendered="#{POrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+
+							</p:column>
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Ordered Date: " for="a_odate">
+									<br></br>
+									<p:calendar id="a_odate" value="#{POrderCtrl.porder.orderdate}"
+										style="width:110px;" rendered="#{POrderCtrl.displayMode>1}" />
+									<p:outputLabel value="#{POrderCtrl.porder.orderdate}"
+										style="font-weight:bold; font-size:small;"
+										rendered="#{POrderCtrl.displayMode==1}" />
+								</p:outputLabel>
+
+							</p:column>
+
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:outputLabel value="Creation Date: " for="a_cdate">
+									<br></br>
+									<p:calendar id="a_cdate" rendered="#{POrderCtrl.displayMode>1}"
+										value="#{POrderCtrl.porder.creationdate}" disabled="true" />
+									<p:outputLabel value="#{POrderCtrl.porder.creationdate}"
+										rendered="#{POrderCtrl.displayMode==1}"
+										style="font-weight:bold; font-size:small;" />
+								</p:outputLabel>
+							</p:column>
+						</p:row>
+						<p:row style="border:0px;  background-color:inherit;">
+							<p:column
+								style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+								<p:commandButton value="Edit Order" id="edit_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-edit"
+									actionListener="#{POrderCtrl.moveToEditMode()}"
+									update="porderadd_form" partialSubmit="true"
+									onstart="blockUIWidget1.block()" style="width:120px"
+									oncomplete="blockUIWidget1.unblock()"
+									rendered="#{POrderCtrl.displayMode==1}">
+								</p:commandButton>
+
+								<p:commandButton value="Add Item" id="add_item_btn"
+									icon="ui-icon-clipboard" styleClass="ui-priority-primary"
+									style="width:120px"
+									actionListener="#{POrderCtrl.moveItemToAddMode()}"
+									rendered="#{POrderCtrl.displayMode==2}" process="@this">
+									<p:ajax event="dialogReturn" listener="#{POrderCtrl.savePitem}"
+										update="porderadd_sformContainer" />
+								</p:commandButton>
+
+								<p:commandButton value="Add Tracking" id="add_tracking_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-truck"
+									actionListener="#{POrderCtrl.moveToAddTrackingMode()}"
+									update="porderadd_form" partialSubmit="true"
+									onstart="blockUIWidget1.block()" style="width:120px"
+									oncomplete="blockUIWidget1.unblock()"
+									rendered="#{POrderCtrl.displayMode==2}">
+								</p:commandButton>
+							</p:column>
+
+							<p:column style="border:0px;  background-color:inherit;">
+								<p:commandButton id="printit" value="Print" type="button"
+									icon="icn-print" rendered="#{POrderCtrl.displayMode==1}">
+									<p:printer target="porderadd_sformContainer" />
+								</p:commandButton>
+							</p:column>
+							<p:column style="border:0px;  background-color:inherit;">
+								<p:commandButton value="Save Order" id="save_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-disk"
+									actionListener="#{POrderCtrl.savePorder()}"
+									update="porderadd_form" partialSubmit="true"
+									onstart="blockUIWidget1.show();" style="width:120px"
+									oncomplete="blockUIWidget1.hide();"
+									rendered="#{POrderCtrl.displayMode>1}">
+								</p:commandButton>
+								<p:commandButton value="New Purchase Order" id="new_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-plus"
+									actionListener="#{POrderCtrl.moveToNewOrderMode()}"
+									update="porderadd_form" partialSubmit="true"
+									onstart="blockUIWidget1.block()" style="width:180px"
+									oncomplete="blockUIWidget1.unblock()" />
+								<p:commandButton value="Print" id="prnt_btn"
+									styleClass="ui-priority-primary" icon="ui-icon-print"
+									actionListener="#{POrderCtrl.moveToNewOrderMode()}"
+									update="porderadd_form" partialSubmit="true"
+									 style="width:80px"
+									>
+									<p:printer target="porderadd_sformContainer" /></p:commandButton>
+							</p:column>
+
+						</p:row>
+					</p:panelGrid>
+				</div>
+				<p:spacer height="5" title="Order Items "></p:spacer>
+				<p:tabView style=" font-size:smaller; border:1px;">
+					<p:tab title="Items" titleStyle="font-size:x-small;">
+						<p:dataTable var="item" value="#{POrderCtrl.porder.pitems}"
+							style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+							<!-- selection="#{POrderCtrl.pitem}" selectionMode="single" -->
+							<!-- <p:ajax event="rowSelect" listener="#{POrderCtrl.moveToEditItemMode}" />
+								<p:ajax event="dialogReturn" listener="#{POrderCtrl.savePitem}"
+										update="porderadd_sformContainer" 
+										 /> -->
+							<p:column style="width:16px; font-size:smaller;">
+								<p:rowToggler />
+							</p:column>
+							<p:column headerText="Image"
+								style="width:55px; font-size:smaller;">
+								<p:graphicImage value="#{POrderCtrl.steamedItemImage}"
+									id="img_" height="50" cache="false"
+									width="50">
+									<f:param name="itemId" value="#{item.seqId}" />
+								</p:graphicImage>
+								<p:tooltip for="img_" on="">
+									<p:graphicImage value="#{POrderCtrl.steamedItemImage}"
+										height="250" cache="false" width="250" >
+										<f:param name="itemId" value="#{item.seqId}" />
+										</p:graphicImage>	
+								</p:tooltip>
+							</p:column>
+							<p:column headerText="Sequence"
+								style="width:60px; font-size:smaller;">
+								<h:outputText value="#{item.formatedSeqId}" />
+							</p:column>
+							<p:column headerText="Q / S"
+								style="font-size:smaller; width:45px;">
+								<h:outputText
+									value="#{item.deliveredQuantity} / #{item.quantityInStock}" />
+							</p:column>
+							<p:column headerText="Name" style="font-size:smaller; ">
+								<h:outputText value="#{item.name}" />
+							</p:column>
+							<p:column headerText="Value / Price"
+								style="font-size:smaller; width:130px;">
+								<h:outputText value="#{item.valueInSAR} / #{item.sellingValue}" />
+							</p:column>
+							<p:column style="width:32px;text-align: center">
+								<p:commandButton icon="ui-icon-pencil" title="Edit" style="width:30; height:30;"
+									action="#{POrderCtrl.moveItemToEditMode()}"
+									partialSubmit="true">
+
+									<f:setPropertyActionListener value="#{item}"
+										target="#{POrderCtrl.pitem}" />
+									<p:ajax event="dialogReturn" listener="#{POrderCtrl.savePitem}"
+										update="porderadd_form:porderadd_sformContainer" />
+								</p:commandButton>
+							</p:column>
+
+							<p:rowExpansion>
+								<p:panelGrid
+									style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+									<p:row style="border:0px;  background-color:inherit;">
+										<p:column rowspan="5"
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<p:graphicImage value="#{POrderCtrl.steamedItemImage}"
+												height="100" cache="false" width="100">
+												<f:param id="itemId" name="itemId" value="#{item.seqId}" />
+											</p:graphicImage>
+										</p:column>
+
+										<p:column
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="Order Id: " />
+											<h:outputText
+												value="#{item.porder.orderId} (#{item.porder.seqId})"
+												style="font-weight:bold;" />
+										</p:column>
+										<p:column
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="Status: " />
+											<h:outputText value="#{item.pitemStatus.key}"
+												style="font-weight:bold;" />
+										</p:column>
+									</p:row>
+									<p:row style="border:0px;  background-color:inherit;">
+										<p:column
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="Value: " />
+											<h:outputText
+												value="#{item.value} #{item.currencyBean.key}- (#{item.valueInSAR}) SAR"
+												style="font-weight:bold;" />
+										</p:column>
+										<p:column
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="Selling / Discount: " />
+											<h:outputText
+												value="#{item.sellingValue} / #{item.maxDiscount} SAR"
+												style="font-weight:bold;" />
+										</p:column>
+									</p:row>
+									<p:row style="border:0px;  background-color:inherit;">
+										<p:column
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="Quatity / Delivered: " />
+											<h:outputText
+												value="#{item.quantity} / #{item.deliveredQuantity}"
+												style="font-weight:bold;" />
+										</p:column>
+										<p:column
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="Stock: " />
+											<h:outputText value="#{item.quantityInStock}"
+												style="font-weight:bold;" />
+										</p:column>
+									</p:row>
+									<p:row style="border:0px;  background-color:inherit;">
+										<p:column colspan="2"
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="url: " />
+											<h:outputText value="#{item.url}" />
+										</p:column>
+									</p:row>
+									<p:row style="border:0px;  background-color:inherit;">
+										<p:column colspan="2"
+											style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+											<h:outputText value="comment: " />
+											<h:outputText value="#{item.comment}" />
+										</p:column>
+									</p:row>
+								</p:panelGrid>
+							</p:rowExpansion>
+						</p:dataTable>
+
+					</p:tab>
+					<p:tab title="Tracking Numbers" style="font-size:smaller;">
+
+					</p:tab>
+
+				</p:tabView>
+
+				<p:blockUI block="porderadd_form" widgetVar="blockUIWidget1">
+					PROCESSING DATA<br />
+					<p:graphicImage value="../design/images/ajax-loader1.gif" />
+				</p:blockUI>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>

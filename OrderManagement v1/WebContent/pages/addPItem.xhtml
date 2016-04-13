@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+	<title>Purchased Item</title>
+	<style type="text/css">
+.ui-widget {
+	font-size: smaller;
+}
+
+.image-dialog .ui-dialog {
+	width: 1300px !important;
+}
+
+iframe {
+	width: 1300px !important;
+}
+</style>
+	<script>
+		function resizePanel() {
+
+			var th = $(window).height();
+			var tw = $(window).width();
+			var iframe = $('iframe');
+			$("div[id$=sformContainer]").width(tw - 10);
+			iframe.width(tw + 250);
+			iframe.height(th + 200);
+		}
+	</script>
+</h:head>
+
+<h:body onload="resizePanel();">
+	
+	<h:form id="addPItemDlg_form" enctype="multipart/form-data">
+		<p:panel id="pitemadd_sformContainer"
+			style="opcity:0;  width:100%; height:100% background-color:rgba(39, 171, 255, 0.00); padding:5px; margin:0px;"
+			header=" Purchased Item #{POrderCtrl.pitem.formatedSeqId}">
+			<div class="ui-fluid">
+			<p:panelGrid id="pitem_panel"
+				style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; cell-padding:5px; spacing:0px;">
+
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column width="33%"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel
+							value="Order Id: #{POrderCtrl.pitem.porder.orderId} ( #{POrderCtrl.pitem.porder.formatedSeqId} )">
+						</p:outputLabel>
+
+					</p:column>
+					<p:column  width="33%"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel
+							value="Site: #{POrderCtrl.pitem.site} ">
+						</p:outputLabel>
+
+					</p:column>
+					<p:column colspan="2" width="33%"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Order Date: #{POrderCtrl.pitem.orderdate}">
+						</p:outputLabel>
+
+					</p:column>
+				</p:row>
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column colspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Item Name: " for="i_name">
+							<br></br>
+							<p:inputText id="i_name" value="#{POrderCtrl.pitem.name}"
+								rendered="#{POrderCtrl.idisplayMode>1}" required="true"
+								validatorMessage="is required" size="75">
+
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.name}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+					<p:column
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Type: " for="i_type">
+							<br></br>
+							<p:selectOneMenu id="i_type"
+								rendered="#{POrderCtrl.idisplayMode>1}"
+								value="#{POrderCtrl.pitem.type}" label="Type"
+								converter="omnifaces.SelectItemsConverter"
+								panelStyle="width:250px" style="width:120px;">
+								<p:ajax event="change"></p:ajax>
+								<f:selectItems value="#{lovsCtrl.itemTypeMap.entrySet()}"
+									var="entry" itemValue="#{entry.value}" itemLabel="#{entry.key}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="#{POrderCtrl.pitem.type}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+						</p:column>
+						<p:column
+						style="border:0px;  background-color:inherit; padding:5px;">
+						
+						<p:outputLabel value="Status: " for="i_status">
+							<br></br>
+							<p:selectOneMenu id="i_status"
+								rendered="#{POrderCtrl.idisplayMode>1}"
+								value="#{POrderCtrl.pitem.pitemStatus}" label="Status"
+								converter="omnifaces.SelectItemsConverter"
+								panelStyle="width:250px" style="width:120px;">
+								<p:ajax event="change"></p:ajax>
+								<f:selectItems value="#{lovsCtrl.PItemStatusMap.entrySet()}"
+									var="entry" itemValue="#{entry.value}" itemLabel="#{entry.key}" />
+							</p:selectOneMenu>
+							<p:outputLabel value="#{POrderCtrl.pitem.pitemStatus.key}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+				</p:row>
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column colspan="1"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Value original (#{POrderCtrl.pitem.currencyBean.key}): " for="i_value">
+							<p:outputLabel value="#{POrderCtrl.pitem.valueInSAR} SAR"  id="i_sar_value"
+								style="color:blue;" />
+							<br></br>
+							<p:inputText id="i_value" value="#{POrderCtrl.pitem.value}"
+								rendered="#{POrderCtrl.idisplayMode>1}">	
+								<p:ajax event="keyup" update="i_sar_value" />
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.value}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+						<p:outputLabel value="#{POrderCtrl.pitem.currencyBean.key}" />
+					</p:column>
+					<p:column colspan="1"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Selling Value SAR: " for="i_svalue">
+
+							<br></br>
+							<p:inputText id="i_svalue"
+								value="#{POrderCtrl.pitem.sellingValue}"
+								rendered="#{POrderCtrl.idisplayMode>1}">
+								<p:ajax event="keyup" update="i_sar_value" />
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.sellingValue}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+
+					</p:column>
+					<p:column colspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Max Discount: " for="i_dvalue">
+
+							<br></br>
+							<p:inputText id="i_dvalue"
+								value="#{POrderCtrl.pitem.maxDiscount}"
+								rendered="#{POrderCtrl.idisplayMode>1}">
+								<p:ajax event="keyup" update="i_sar_value" />
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.maxDiscount}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+				</p:row>
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Purchased Quantity: " for="i_pquantity">
+
+							<br></br>
+							<p:inputText id="i_pquantity"
+								value="#{POrderCtrl.pitem.quantity}"
+								rendered="#{POrderCtrl.idisplayMode>1}">
+								<p:ajax event="keyup" update="i_sar_value" />
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.quantity}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+					<p:column
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Delivered Quantity: " for="i_dquantity">
+
+							<br></br>
+							<p:inputText id="i_dquantity"
+								value="#{POrderCtrl.pitem.deliveredQuantity}"
+								rendered="#{POrderCtrl.idisplayMode>1}">
+								<p:ajax event="keyup" update="i_sar_value" />
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.deliveredQuantity}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+					<p:column colspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Stock Quantity: " for="i_squantity">
+
+							<br></br>
+							<p:inputText id="i_squantity"
+								value="#{POrderCtrl.pitem.quantityInStock}"
+								rendered="#{POrderCtrl.idisplayMode>1}">
+								<p:ajax event="keyup" update="i_sar_value" />
+							</p:inputText>
+							<p:outputLabel value="#{POrderCtrl.pitem.quantityInStock}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+
+				</p:row>
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column rowspan="2" colspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Comments: " for="i_comment">
+							<br></br>
+							<p:inputTextarea id="i_comment"
+								rendered="#{POrderCtrl.idisplayMode>1}"
+								value="#{POrderCtrl.pitem.comment}"
+								style="height:70px; max-height:150px;" scrollHeight="150"
+								autoResize="false" cols="70" rows="4">
+							</p:inputTextarea>
+							<p:outputLabel value="#{POrderCtrl.pitem.comment}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+
+					</p:column> 
+					<p:column rowspan="1" colspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Creation Date: " for="i_cdate">
+							<br></br>
+							<p:calendar id="i_cdate" rendered="#{POrderCtrl.idisplayMode>1}"
+								value="#{POrderCtrl.pitem.creationdate}" disabled="true" />
+							<p:outputLabel value="#{POrderCtrl.pitem.creationdate}"
+								rendered="#{POrderCtrl.idisplayMode==1}"
+								style="font-weight:bold; font-size:small;" />
+						</p:outputLabel>
+					</p:column>
+				</p:row>
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column rowspan="1" colspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:outputLabel value="Link: " for="i_url">
+							<br></br>
+							<p:inputText id="i_url" rendered="#{POrderCtrl.idisplayMode>1}"
+								value="#{POrderCtrl.pitem.url}" />
+							<p:button href="#{POrderCtrl.pitem.url}"
+								value="#{POrderCtrl.pitem.url}"
+								rendered="#{POrderCtrl.idisplayMode==1}" />
+						</p:outputLabel>
+					</p:column>
+				</p:row>
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column rowspan="1"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:fileUpload value="#{POrderCtrl.file}" 
+							skinSimple="true" 
+							auto="true"  update="pitem_gi" process="@all"
+							fileUploadListener="#{POrderCtrl.handlePitemImage}" previewWidth="100" 
+							 >
+							 </p:fileUpload>
+
+					</p:column>
+					<p:column rowspan="2"
+						style="border:0px;  background-color:inherit; padding:5px;">
+						<p:graphicImage value="#{POrderCtrl.pitemImage}" id="pitem_gi"  width="80" 	 height="80"  cache="false"></p:graphicImage> 
+					</p:column>
+				</p:row>
+
+				<p:row style="border:0px;  background-color:inherit;">
+					<p:column style="border:0px;  background-color:inherit;">
+						<p:commandButton value="Edit Item" icon="ui-icon-edit"
+							styleClass="ui-priority-primary"
+							actionListener="#{POrderCtrl.moveItemToEditMode()}"
+							update="pitem_panel" partialSubmit="true"
+							rendered="#{POrderCtrl.idisplayMode==1}">
+						</p:commandButton>
+
+					</p:column>
+
+					<p:column style="border:0px;  background-color:inherit;">
+						<p:commandButton value="Save Item" icon="ui-icon-floppy"
+							styleClass="ui-priority-primary" style="width:120px"
+							actionListener="#{POrderCtrl.closeDialog(POrderCtrl.pitem)}"
+							update="pitem_panel" partialSubmit="true"
+							rendered="#{POrderCtrl.idisplayMode>1}">
+						</p:commandButton>
+						<p:commandButton value="Close" styleClass="ui-priority-primary"
+							icon="ui-icon-logout" style="width:120px"
+							actionListener="#{POrderCtrl.closeDialog()}" partialSubmit="true" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+</div>
+		</p:panel>
+
+
+
+	</h:form>
+</h:body>
+
+</html>

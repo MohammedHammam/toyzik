@@ -1,0 +1,350 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/templates/template.xhtml">
+	<ui:define name="metadata">
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="pitemsearch_form" enctype="multipart/form-data">
+			<p:panel id="pitemsearch_sformContainer"
+				header="Search Purchased Items">
+				<p:panelGrid style="width:100%">
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Order Id: " for="s_orderId"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_orderId" value="#{PItemCtrl.s_orderId}">
+
+								</p:inputText>
+							</p:outputLabel>
+
+						</p:column>
+						<p:column>
+							<!-- <p:outputLabel value="Site: " for="s_site"
+								style="font-weight:bold">
+								<br></br>
+								<p:selectCheckboxMenu id="s_site" value="#{PItemCtrl.s_sites}"
+									label="Sites" panelStyle="width:250px">
+									<f:selectItems value="#{lovsCtrl.sitesList}" />
+								</p:selectCheckboxMenu>
+							</p:outputLabel> -->
+							<p:outputLabel value="Type: " for="s_type"
+								style="font-weight:bold">
+								<br></br>
+								<p:selectCheckboxMenu id="s_type"
+									value="#{PItemCtrl.s_itemTypes}" label="Type"
+									panelStyle="width:250px">
+									<f:selectItems value="#{lovsCtrl.itemTypeList}" />
+								</p:selectCheckboxMenu>
+
+
+							</p:outputLabel>
+
+
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Status: " for="s_status"
+								style="font-weight:bold">
+								<br></br>
+								<p:selectCheckboxMenu id="s_status"
+									value="#{PItemCtrl.s_status}" label="Status"
+									panelStyle="width:250px">
+									<f:selectItems value="#{lovsCtrl.pitemStatusList}" />
+								</p:selectCheckboxMenu>
+							</p:outputLabel>
+
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="Name: " for="s_name"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_name" value="#{PItemCtrl.s_name}">
+
+								</p:inputText>
+							</p:outputLabel>
+
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Item Id: " for="s_itemId"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_itemId" value="#{PItemCtrl.s_itemId}">
+
+								</p:inputText>
+
+							</p:outputLabel>
+
+						</p:column>
+						<p:column>
+							<p:outputLabel value="Stock: " for="s_stock"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_stock" value="#{PItemCtrl.s_stock}">
+
+								</p:inputText>
+							</p:outputLabel>
+
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column colspan="3">
+							<p:accordionPanel activeIndex="null">
+								<p:tab title="Advanced Search">
+									<p:panel>
+										<p:panelGrid style="width:100%">
+											<p:row>
+												<p:column colspan="2">
+													<h:panelGrid columns="1" style="margin-bottom: 10px">
+														<h:outputText id="s_value"
+															value="Value Between #{PItemCtrl.s_valueFrom} and #{PItemCtrl.s_valueTo}" />
+														<p:slider for="s_vf,s_vt" display="s_value"
+															style="width: 400px" range="true"
+															displayTemplate="Value Between {min} and {max}" />
+													</h:panelGrid>
+													<h:inputHidden id="s_vf" value="#{PItemCtrl.s_valueFrom}" />
+													<h:inputHidden id="s_vt" value="#{PItemCtrl.s_valueTo}" />
+
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGrid columns="1" style="margin-bottom: 10px">
+														<h:outputText id="s_svalue"
+															value="Selling Value Between #{PItemCtrl.s_svalueFrom} and #{PItemCtrl.s_svalueTo}" />
+														<p:slider for="s_svf,s_svt" display="s_svalue"
+															style="width: 400px" range="true"
+															displayTemplate="Selling Value Between {min} and {max}" />
+													</h:panelGrid>
+													<h:inputHidden id="s_svf" value="#{PItemCtrl.s_svalueFrom}" />
+													<h:inputHidden id="s_svt" value="#{PItemCtrl.s_svalueTo}" />
+
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">
+													<p:outputLabel value="Order Date : " for="s_orderdatef"
+														style="font-weight:bold">
+														<br></br>
+														<p:calendar id="s_orderdatef"
+															value="#{PItemCtrl.s_odateFrom}" /> - <p:calendar
+															id="s_orderdatet" value="#{PItemCtrl.s_odateTo}" />
+													</p:outputLabel>
+												</p:column>
+												<p:column colspan="2">
+													<p:outputLabel value="Created Date : " for="s_createdatef"
+														style="font-weight:bold">
+														<br></br>
+														<p:calendar id="s_createdatef"
+															value="#{PItemCtrl.s_cdateFrom}" /> - <p:calendar
+															id="s_createdatet" value="#{PItemCtrl.s_cdateTo}" />
+													</p:outputLabel>
+												</p:column>
+											</p:row>
+											<p:row>
+												<p:column colspan="2">
+													<h:panelGrid columns="1" style="margin-bottom: 10px">
+														<h:outputText id="s_quantity"
+															value="Quantity Between #{PItemCtrl.s_quantFrom} and #{PItemCtrl.s_quantTo}" />
+														<p:slider for="s_qf,s_qt" display="s_quantity"
+															style="width: 400px" range="true"
+															displayTemplate="Quantity Between {min} and {max}" />
+													</h:panelGrid>
+													<h:inputHidden id="s_qf" value="#{PItemCtrl.s_quantFrom}" />
+													<h:inputHidden id="s_qt" value="#{PItemCtrl.s_quantTo}" />
+
+												</p:column>
+												<p:column colspan="2">
+													<h:panelGrid columns="1" style="margin-bottom: 10px">
+														<h:outputText id="s_squantity"
+															value="Stock Quantity Between #{PItemCtrl.s_squantFrom} and #{PItemCtrl.s_squantTo}" />
+														<p:slider for="s_sqf,s_sqt" display="s_squantity"
+															style="width: 400px" range="true"
+															displayTemplate="Stock Quantity Between {min} and {max}" />
+													</h:panelGrid>
+													<h:inputHidden id="s_sqf" value="#{PItemCtrl.s_squantFrom}" />
+													<h:inputHidden id="s_sqt" value="#{PItemCtrl.s_squantTo}" />
+
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:tab>
+
+							</p:accordionPanel>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:commandButton value="Table View"
+								rendered="#{!PItemCtrl.tableView}"
+								styleClass="ui-priority-primary"
+								actionListener="#{PItemCtrl.moveToTableView}"
+								update="pitemsearch_form" partialSubmit="true" />
+							<p:commandButton value="Photos View"
+								rendered="#{PItemCtrl.tableView}"
+								styleClass="ui-priority-primary"
+								actionListener="#{PItemCtrl.moveToPhotoView}"
+								update="pitemsearch_form" partialSubmit="true" />
+						</p:column>
+						<p:column></p:column>
+						<p:column>
+							<p:commandButton value="Clear" id="clear_btn"
+								styleClass="ui-priority-primary"
+								actionListener="#{PItemCtrl.clearSearch()}"
+								update="pitemsearch_form" partialSubmit="true">
+							</p:commandButton>
+							<p:commandButton value="Search" id="save_btn"
+								styleClass="ui-priority-primary"
+								actionListener="#{PItemCtrl.searchItems}"
+								update="pitemsearch_form" partialSubmit="true"
+								onstart="blockUIWidget1.block()"
+								oncomplete="blockUIWidget1.unblock()" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<p:spacer height="10px"></p:spacer>
+
+
+				<p:dataTable var="item" value="#{PItemCtrl.pitems}" filterDelay="1"
+					sortMode="multiple" scrollable="true" scrollHeight="400"
+					rowKey="#{pitem.seqId}" rendered="#{PItemCtrl.tableView}"
+					style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+
+					<p:column style="width:16px; font-size:smaller;">
+						<p:rowToggler />
+					</p:column>
+					<p:column headerText="Image" style="width:60px; font-size:smaller;">
+						<p:graphicImage value="#{PItemCtrl.steamedItemImage}" height="50"
+							cache="false" width="50">
+							<f:param name="itemId" value="#{item.seqId}" />
+							<f:param name="itemId2" value="Hammam" />
+						</p:graphicImage>
+					</p:column>
+					<p:column headerText="Sequence" sortBy="#{item.formatedSeqId}"
+						style="width:100px; font-size:smaller;">
+						<h:outputText value="#{item.formatedSeqId}"
+							style="font-weight:bold;" />
+					</p:column>
+					<p:column headerText="Order" sortBy="#{item.siteOrderId}"
+						style="width:100px; font-size:smaller;">
+						<p:commandLink action="#{PItemCtrl.selectOrder(item)}">
+							<h:outputText value="#{item.siteOrderId}"
+								style="font-weight:bold; color:blue;" />
+						</p:commandLink>
+					</p:column>
+					<p:column headerText="Type" sortBy="#{item.type.key}"
+						style="width:100px; font-size:smaller;">
+						<h:outputText value="#{item.type.key}" />
+					</p:column>
+					<p:column headerText="Name" style="font-size:smaller;"
+						sortBy="#{item.name}">
+						<h:outputText value="#{item.name}" />
+					</p:column>
+					<p:column headerText="Status" style="font-size:smaller;"
+						sortBy="#{item.pitemStatus.key}">
+						<h:outputText value="#{item.pitemStatus.key}"
+							style="font-weight:bold;" />
+					</p:column>
+					<p:column headerText="Stock" style="font-size:smaller;"
+						sortBy="#{item.quantityInStock}">
+						<h:outputText value="#{item.quantityInStock}"
+							style="font-weight:bold;" />
+					</p:column>
+					
+
+					<p:rowExpansion>
+						<p:panelGrid
+							style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+							<p:row style="border:0px;  background-color:inherit;">
+								<p:column rowspan="5"
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<p:graphicImage value="#{PItemCtrl.steamedItemImage}"
+										height="100" cache="false" width="100">
+										<f:param name="itemId" value="#{item.seqId}" />
+									</p:graphicImage>
+								</p:column>
+
+								<p:column
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="Order Id: " />
+									<h:outputText
+										value="#{item.porder.orderId} (#{item.porder.seqId})"
+										style="font-weight:bold;" />
+								</p:column>
+								<p:column
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="Status: " />
+									<h:outputText value="#{item.pitemStatus.key}"
+										style="font-weight:bold;" />
+								</p:column>
+							</p:row>
+							<p:row style="border:0px;  background-color:inherit;">
+								<p:column
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="Value: " />
+									<h:outputText
+										value="#{item.value} #{item.currencyBean.key}- (#{item.valueInSAR}) SAR"
+										style="font-weight:bold;" />
+								</p:column>
+								<p:column
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="Selling / Discount: " />
+									<h:outputText
+										value="#{item.sellingValue} / #{item.maxDiscount} SAR"
+										style="font-weight:bold;" />
+								</p:column>
+							</p:row>
+							<p:row style="border:0px;  background-color:inherit;">
+								<p:column
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="Quatity / Delivered: " />
+									<h:outputText
+										value="#{item.quantity} / #{item.deliveredQuantity}"
+										style="font-weight:bold;" />
+								</p:column>
+								<p:column
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="Stock: " />
+									<h:outputText value="#{item.quantityInStock}"
+										style="font-weight:bold;" />
+								</p:column>
+							</p:row>
+							<p:row style="border:0px;  background-color:inherit;">
+								<p:column colspan="2"
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="url: " />
+									<h:outputText value="#{item.url}" />
+								</p:column>
+							</p:row>
+							<p:row style="border:0px;  background-color:inherit;">
+								<p:column colspan="2"
+									style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+									<h:outputText value="comment: " />
+									<h:outputText value="#{item.comment}" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</p:rowExpansion>
+				</p:dataTable>
+
+			</p:panel>
+			<pe:blockUI target="pitemsearch_formContainer"
+				widgetVar="blockUIWidget1">
+				<div class="noBorders">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../images/ajax-loader1.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Under processing ..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</div>
+			</pe:blockUI>
+		</h:form>
+
+		
+	</ui:define>
+</ui:composition>

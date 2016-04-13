@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<f:view contentType="text/html" id="fview">
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+	<title>Page template with PrimeFaces</title>
+	<ui:debug />
+	<f:metadata>
+		<ui:insert name="metadata" />
+	</f:metadata>
+
+	<h:head>
+		<script language="javascript" src="../jsf2.js"></script>
+<style>iframe{
+width: 950px !important;
+}
+
+._50 {
+	width: 46%;
+	display: inline;
+	float: left;
+	margin-left: 2%;
+	margin-right: 2%;
+}
+
+._30 {
+	width: 25%;
+	display: inline;
+	float: left;
+	margin-left: 2%;
+	margin-right: 2%;
+}
+</style>
+		<script>
+			function resizePanel() {
+				//alert($(window).width());
+				/* var w = new Number($(window).width()-200);
+				var h = new Number($(window).height()-200);
+				//jQuery(selId + " .ui-datatable-scrollable-body").height(dhe-40);
+				alert (w + "   "+ h); */
+
+				var selId = "div[id$=scrollP]";
+				var th = $(window).height();
+				var tw = $(window).width();
+				//alert("th = " + th);
+				//alert("tw = " + tw);
+				//$("div[id$=sformContainer]").height(th - 300);
+				$("div[id$=sformContainer]").width(tw - 250);
+				//$("div[id$=sformContainer]").style("width:tw - 250");
+				var h = th - gh - 150;
+				//alert("h  = "+h);
+				/* $.each($("div[id$=scrollP]"), function() {
+				       //alert( $(this).height() );
+				       $(this).height(h);   
+				}); */
+				//jQuery(selId + " .ui-datatable-scrollable-body").height(dhe-40);
+				//alert(jQuery(selId + " .ui-datatable-scrollable-body").height());
+			}
+		</script>
+
+
+	</h:head>
+
+	<h:body style="font-size:small" onload="resizePanel();">
+		<p:layout fullPage="true" resizeTitle="resize"
+			style="background-color:#FFFFFF;">
+
+			<!-- <p:layoutUnit position="north" size="20" id="north">
+				<ui:include src="header.xhtml" />
+			</p:layoutUnit> -->
+
+			<p:layoutUnit position="west" id="west" resizable="false"
+				header="#{msg['menu.title']}" style="height:580px;overflow:hidden;"
+				size="200">
+				<ui:include src="menu.xhtml" />
+			</p:layoutUnit>
+
+			<p:layoutUnit styleClass="layoutUnitCenter" position="center">
+
+				<p:messages autoUpdate="true" id="msgs" showDetail="true"
+					showSummary="true" />
+				<ui:insert name="content" />
+
+			</p:layoutUnit>
+
+			<!-- <p:layoutUnit position="east" size="0"
+				style="width:0px; display:none;" id="east">
+			</p:layoutUnit> -->
+
+			<!-- <p:layoutUnit position="south" resizable="true" id="south">
+				<ui:include src="footer.xhtml" />
+			</p:layoutUnit> -->
+
+		</p:layout>
+
+	</h:body>
+
+</f:view>
+</html>

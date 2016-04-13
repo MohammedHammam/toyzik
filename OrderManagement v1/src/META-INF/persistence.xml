@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="OrderManagement v1">
+		<class>com.hammam.business.om.jpa.Carrier</class>
+		<class>com.hammam.business.om.jpa.ItemType</class>
+		<class>com.hammam.business.om.jpa.Currency</class>
+		<class>com.hammam.business.om.jpa.Pitem</class>
+		<class>com.hammam.business.om.jpa.PitemStatus</class>
+		<class>com.hammam.business.om.jpa.Porder</class>
+		<class>com.hammam.business.om.jpa.PorderStatus</class>
+		<class>com.hammam.business.om.jpa.Ptracking</class>
+		<class>com.hammam.business.om.jpa.PtrackingStatus</class>
+		<class>com.hammam.business.om.jpa.Site</class>
+		<class>com.hammam.business.om.jpa.DeliveryType</class>
+		<class>com.hammam.business.om.jpa.Sitem</class>
+		<class>com.hammam.business.om.jpa.Sorder</class>
+		<class>com.hammam.business.om.jpa.SorderStatus</class>
+	</persistence-unit>
+</persistence>

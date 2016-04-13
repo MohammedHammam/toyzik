@@ -1,0 +1,215 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/templates/template.xhtml">
+	<ui:define name="metadata">
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="pordersearch_form">
+			<p:panel id="pordersearch_formContainer"
+				header="Search Purchased Orders">
+				<p:panelGrid id="pordersearch_formContainerg"
+					style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+					<p:row style="border:0px;  background-color:inherit;">
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:outputLabel value="Order Id: " for="s_orderId"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_orderId" value="#{POrderCtrl.s_orderId}">
+
+								</p:inputText>
+							</p:outputLabel>
+
+						</p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:outputLabel value="Site: " for="s_site"
+								style="font-weight:bold">
+								<br></br>
+								<p:selectCheckboxMenu id="s_site" value="#{POrderCtrl.s_sites}"
+									label="Sites" panelStyle="width:250px">
+									<f:selectItems value="#{lovsCtrl.sitesList}" />
+								</p:selectCheckboxMenu>
+							</p:outputLabel>
+
+						</p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:outputLabel value="Status: " for="s_status"
+								style="font-weight:bold">
+								<br></br>
+								<p:selectCheckboxMenu id="s_status"
+									value="#{POrderCtrl.s_status}" label="Status"
+									panelStyle="width:250px">
+									<f:selectItems value="#{lovsCtrl.porderStatusList}" />
+								</p:selectCheckboxMenu>
+							</p:outputLabel>
+						</p:column>
+					</p:row>
+					<p:row style="border-width:0px;  background-color:inherit;">
+						<p:column colspan="3"
+							style="border-width:0px;  background-color:inherit; padding:10 10 10 10px;">
+							<p:accordionPanel activeIndex="null"
+								style="border-width:1px; border-color:black;">
+								<p:tab title="Advanced Search" style="border-width:1px;">
+									<p:panel style="border-width:1px;">
+										<p:panelGrid
+											style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+											<p:row style="border:0px;  background-color:inherit;">
+												<p:column colspan="3"
+													style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+													<h:panelGrid columns="1" style="margin-bottom: 10px">
+														<h:outputText id="s_value"
+															value="Between #{POrderCtrl.s_valueFrom} and #{POrderCtrl.s_valueTo}" />
+														<p:slider for="s_vf,s_vt" display="s_value"
+															style="width: 400px" range="true"
+															displayTemplate="Between {min} and {max}" />
+													</h:panelGrid>
+													<h:inputHidden id="s_vf" value="#{POrderCtrl.s_valueFrom}" />
+													<h:inputHidden id="s_vt" value="#{POrderCtrl.s_valueTo}" />
+
+												</p:column>
+											</p:row>
+											<p:row style="border:0px;  background-color:inherit;">
+												<p:column colspan="3"
+													style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+													<p:outputLabel value="Order Date : " for="s_orderdatef"
+														style="font-weight:bold">
+														<br></br>
+														<p:calendar id="s_orderdatef"
+															value="#{POrderCtrl.s_odateFrom}" /> - <p:calendar
+															id="s_orderdatet" value="#{POrderCtrl.s_odateTo}" />
+													</p:outputLabel>
+												</p:column>
+											</p:row>
+											<p:row style="border:0px;  background-color:inherit;">
+												<p:column colspan="3"
+													style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+													<p:outputLabel value="Created Date : " for="s_createdatef"
+														style="font-weight:bold">
+														<br></br>
+														<p:calendar id="s_createdatef"
+															value="#{POrderCtrl.s_cdateFrom}" /> - <p:calendar
+															id="s_createdatet" value="#{POrderCtrl.s_cdateTo}" />
+													</p:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:tab>
+
+							</p:accordionPanel>
+						</p:column>
+					</p:row>
+					<p:row style="border:0px;  background-color:inherit;">
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:commandButton value="Clear" id="clear_btn"
+								styleClass="ui-priority-primary"
+								actionListener="#{POrderCtrl.initSearch()}"
+								update="pordersearch_form" partialSubmit="true">
+							</p:commandButton>
+							<p:commandButton value="Search" id="save_btn"
+								styleClass="ui-priority-primary"
+								actionListener="#{POrderCtrl.searchOrders}"
+								update="pordersearch_form" partialSubmit="true" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<p:spacer height="10px"></p:spacer>
+
+
+				<p:dataTable id="orders_dataTable" var="porder" sortMode="multiple"
+					scrollable="true" scrollHeight="300" rowKey="#{porder.seqId}"
+					value="#{POrderCtrl.porders}" filterDelay="1"
+					style="font-size:smaller;">
+					<p:ajax event="rowToggle" listener="#{POrderCtrl.onRowToggle}" partialSubmit="true"
+						 update="orders_dataTable" process="@none"/>
+					<p:column style="width:16px; font-size:smaller;">
+						<p:rowToggler></p:rowToggler>
+
+					</p:column>
+					<p:column headerText="Seq" sortBy="#{porder.formatedSeqId}"
+						style="font-size:smaller;" filterBy="#{porder.formatedSeqId}"
+						filterMatchMode="contains">
+						<h:outputText value="#{porder.formatedSeqId}"
+							style="font-weight:bold" />
+					</p:column>
+					<p:column headerText="Order No." filterBy="#{porder.orderId}"
+						style="font-size:smaller;" filterMatchMode="contains">
+						<h:outputText value="#{porder.orderId}" />
+					</p:column>
+					<p:column headerText="Site" filterBy="#{porder.site.key}"
+						style="font-size:smaller;" filterMatchMode="contains">
+						<h:outputText value="#{porder.site.key}" />
+					</p:column>
+					<p:column headerText="Value" sortBy="#{porder.value}"
+						style="font-size:smaller;">
+						<h:outputText value="#{porder.value} #{porder.currencyBean.key}" />
+					</p:column>
+					<p:column headerText="Created Date" sortBy="#{porder.creationdate}"
+						style="font-size:smaller;">
+						<h:outputText value="#{porder.creationdate}" />
+					</p:column>
+					<p:column headerText="Ordered Date" sortBy="#{porder.orderdate}"
+						style="font-size:smaller;">
+						<h:outputText value="#{porder.orderdate}" />
+					</p:column>
+					<p:column headerText="Status" sortBy="#{porder.porderStatus.key}"
+						style="font-size:smaller;">
+						<h:outputText value="#{porder.porderStatus.key}" />
+					</p:column>
+					<p:column style="width:32px;text-align: center;font-size:smaller;">
+						<p:commandButton icon="ui-icon-edit" title="Edit"
+							style="font-size:smaller;"
+							action="#{POrderCtrl.moveOrderToEditMode()}" partialSubmit="true">
+
+							<f:setPropertyActionListener value="#{porder}"
+								target="#{POrderCtrl.porder}" />
+						</p:commandButton>
+					</p:column>
+					<p:rowExpansion>
+						<p:carousel value="#{porder.pitems}" headerText="Items" numVisible="5"
+							var="item" itemStyle="text-align:center" responsive="true" style="font-size:smaller;">
+							<p:panelGrid columns="1" style="width:100%;margin:10px 0px"
+								columnClasses="label,value" layout="grid"
+								styleClass="ui-panelgrid-blank">
+								<p:graphicImage value="#{POrderCtrl.steamedLiveItemImage}"
+									width="60" height="60" cache="false">
+									<f:param name="itemId" value="#{item.seqId}" />
+								</p:graphicImage>
+
+								<h:outputText value="#{item.name}" />
+								<h:outputText value="Stock : #{item.quantityInStock}" />
+
+							</p:panelGrid>
+
+						</p:carousel>
+					</p:rowExpansion>
+				</p:dataTable>
+
+				<!-- <pe:blockUI target="pordersearch_formContainerg" 
+				widgetVar="blockUIWidget1">
+				<div class="noBorders">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../images/ajax-loader1.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Under processing ..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</div>
+			</pe:blockUI> -->
+			</p:panel>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,36 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+
+	<h:form>
+
+		<p:outputPanel id="menuPanel" layout="block">
+				<p:menu autoSubmenuDisplay="true" style="width:213px;height:483px;border:none;font-size:small;padding:0px;"
+					ajax="false" type="sliding" backLabel="#{msg['menu.back']}">
+					<p:submenu label="Purchasing" icon="ui-icon ui-icon-refresh">
+						<p:menuitem value="Search Orders"
+							url="/faces/pages/searchPorders.xhtml" />
+						<p:menuitem value="Search Items" 
+							url="/faces/pages/searchPitems.xhtml" />
+						<p:menuitem value="Add - Modify Order" 
+							url="/faces/pages/addOrder.xhtml" />
+					</p:submenu>
+					<p:submenu label="Selling" icon="ui-icon ui-icon-refresh">
+						<p:menuitem value="New Customer Order"
+							url="/faces/pages/addSOrder.xhtml?seqid=-1" />
+						<p:menuitem value="Search Customer Orders" 
+							url="/faces/pages/searchSorders.xhtml" />
+					</p:submenu>
+		
+				</p:menu>
+		</p:outputPanel>
+
+	</h:form>
+</ui:composition>
+
+

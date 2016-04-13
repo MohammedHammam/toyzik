@@ -1,0 +1,218 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	template="/templates/template.xhtml">
+	<ui:define name="metadata">
+	</ui:define>
+	<ui:define name="content">
+		<h:form id="sordersearch_form">
+			<p:panel id="sordersearch_formContainer"
+				header="Search Purchased Orders">
+				<p:panelGrid id="sordersearch_formContainerg"
+					style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+					<p:row style="border:0px;  background-color:inherit;">
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:outputLabel value="Customer Name: " for="s_customerName"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_customerName"
+									value="#{SOrderCtrl.s_customerName}">
+
+								</p:inputText>
+							</p:outputLabel>
+
+						</p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:outputLabel value="Contact: " for="s_contact"
+								style="font-weight:bold">
+								<br></br>
+								<p:inputText id="s_contact" value="#{SOrderCtrl.s_contact}">
+
+								</p:inputText>
+							</p:outputLabel>
+
+						</p:column>
+
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:outputLabel value="Status: " for="s_status"
+								style="font-weight:bold">
+								<br></br>
+								<p:selectCheckboxMenu id="s_status"
+									value="#{SOrderCtrl.s_status}" label="Status"
+									panelStyle="width:250px">
+									<f:selectItems value="#{lovsCtrl.sorderStatusList}" />
+								</p:selectCheckboxMenu>
+							</p:outputLabel>
+						</p:column>
+					</p:row>
+					<p:row style="border-width:0px;  background-color:inherit;">
+						<p:column colspan="3"
+							style="border-width:0px;  background-color:inherit; padding:10 10 10 10px;">
+							<p:accordionPanel activeIndex="null"
+								style="border-width:1px; border-color:black;">
+								<p:tab title="Advanced Search" style="border-width:1px;">
+									<p:panel style="border-width:1px;">
+										<p:panelGrid
+											style="width:100%; border:0px; background-color:rgba(39, 171, 255, 0.00); font-size:smaller; padding:10px;">
+											<p:row style="border:0px;  background-color:inherit;">
+												<p:column colspan="3"
+													style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+													<h:panelGrid columns="1" style="margin-bottom: 10px">
+														<h:outputText id="s_value"
+															value="Between #{SOrderCtrl.s_valueFrom} and #{SOrderCtrl.s_valueTo}" />
+														<p:slider for="s_vf,s_vt" display="s_value"
+															style="width: 400px" range="true"
+															displayTemplate="Between {min} and {max}" />
+													</h:panelGrid>
+													<h:inputHidden id="s_vf" value="#{SOrderCtrl.s_valueFrom}" />
+													<h:inputHidden id="s_vt" value="#{SOrderCtrl.s_valueTo}" />
+
+												</p:column>
+											</p:row>
+											<p:row style="border:0px;  background-color:inherit;">
+												<p:column
+													style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+													<p:outputLabel value="Delivery: " for="s_delivery"
+														style="font-weight:bold">
+														<br></br>
+														<p:selectCheckboxMenu id="s_delivery"
+															value="#{SOrderCtrl.s_delivery}" label="Sites"
+															panelStyle="width:250px">
+															<f:selectItems value="#{lovsCtrl.deliveryTypeList}" />
+														</p:selectCheckboxMenu>
+													</p:outputLabel>
+
+												</p:column>
+												<p:column colspan="2"
+													style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+													<p:outputLabel value="Created Date : " for="s_createdatef"
+														style="font-weight:bold">
+														<br></br>
+														<p:calendar id="s_createdatef"
+															value="#{SOrderCtrl.s_cdateFrom}" /> - <p:calendar
+															id="s_createdatet" value="#{SOrderCtrl.s_cdateTo}" />
+													</p:outputLabel>
+												</p:column>
+											</p:row>
+										</p:panelGrid>
+									</p:panel>
+								</p:tab>
+
+							</p:accordionPanel>
+						</p:column>
+					</p:row>
+					<p:row style="border:0px;  background-color:inherit;">
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;"></p:column>
+						<p:column
+							style="border:0px;  background-color:inherit; padding:2 10 2 10px;">
+							<p:commandButton value="Clear" id="clear_btn"
+								styleClass="ui-priority-primary"
+								actionListener="#{SOrderCtrl.initSearch()}"
+								update="sordersearch_form" partialSubmit="true">
+							</p:commandButton>
+							<p:commandButton value="Search" id="save_btn"
+								styleClass="ui-priority-primary"
+								actionListener="#{SOrderCtrl.searchOrders}"
+								update="sordersearch_form" partialSubmit="true" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				<p:spacer height="10px"></p:spacer>
+
+
+				<p:dataTable id="orders_dataTable" var="sorder" sortMode="multiple"
+					scrollable="true" scrollHeight="300" rowKey="#{sorder.seqId}"
+					value="#{SOrderCtrl.sorders}" filterDelay="1"
+					style="font-size:smaller;">
+					<p:ajax event="rowToggle" listener="#{SOrderCtrl.onRowToggle}"
+						partialSubmit="true" update="orders_dataTable" process="@none" />
+					<p:column style="width:16px; font-size:smaller;">
+						<p:rowToggler></p:rowToggler>
+
+					</p:column>
+					<p:column headerText="Seq" sortBy="#{sorder.formatedSeqId}"
+						style="font-size:smaller; width:80px" >
+						<h:outputText value="#{sorder.formatedSeqId}"
+							style="font-weight:bold" />
+					</p:column>
+					<p:column headerText="Customer Name" sortBy="#{sorder.customerName}"
+						style="font-size:smaller; width:180px" >
+						<h:outputText value="#{sorder.customerName}" />
+					</p:column>
+					<p:column headerText="Value / Discount" 
+						style="font-size:smaller;">
+						<h:outputText value="#{sorder.totalValue} / #{sorder.totalDiscount}" />
+					</p:column>
+					<p:column headerText="Items" sortBy="#{sorder.noItems}"
+						style="font-size:smaller;  width:55px" >
+						<h:outputText value="#{sorder.noItems}" />
+					</p:column>
+					<p:column headerText="Status" sortBy="#{sorder.sorderStatus.key}"
+						style="font-size:smaller;">
+						<h:outputText value="#{sorder.sorderStatus.key}" />
+					</p:column>
+					<p:column headerText="Delivery" sortBy="#{sorder.deliveryTypeBean.key}"
+						style="font-size:smaller; width:90px">
+						<h:outputText value="#{sorder.deliveryTypeBean.key}" />
+					</p:column>
+					
+					<p:column headerText="Created Date" sortBy="#{sorder.creation_Date}"
+						style="font-size:smaller;">
+						<h:outputText value="#{sorder.creation_Date}" />
+					</p:column>
+					<p:column style="width:32px;text-align: center;font-size:smaller;">
+						<p:commandButton icon="ui-icon-edit" title="Edit"
+							style="font-size:smaller;"
+							action="#{SOrderCtrl.moveOrderToEditMode()}" partialSubmit="true">
+
+							<f:setPropertyActionListener value="#{sorder}"
+								target="#{SOrderCtrl.sorder}" />
+						</p:commandButton>
+					</p:column>
+					<p:rowExpansion>
+						<p:carousel value="#{sorder.sitems}" headerText="Items"
+							numVisible="8" var="item" itemStyle="text-align:center"
+							responsive="true" style="font-size:smaller;">
+							<p:panelGrid columns="1" style="width:100%;margin:10px 0px"
+								columnClasses="label,value" layout="grid"
+								styleClass="ui-panelgrid-blank">
+								<p:graphicImage value="#{SOrderCtrl.steamedItemImage}"
+									width="60" height="60" cache="false">
+									<f:param name="itemId" value="#{item.pitem_seqId}" />
+								</p:graphicImage>
+
+								<h:outputText value="#{item.pitem.name}" />
+								<h:outputText value="Quantity : #{item.quantity}" />
+
+							</p:panelGrid>
+
+						</p:carousel>
+					</p:rowExpansion>
+				</p:dataTable>
+
+				<!-- <pe:blockUI target="sordersearch_formContainerg" 
+				widgetVar="blockUIWidget1">
+				<div class="noBorders">
+					<h:panelGrid columns="2">
+						<h:graphicImage value="../images/ajax-loader1.gif"
+							style="margin-right: 12px; vertical-align: middle;" />
+						<h:outputText value="Under processing ..."
+							style="white-space: nowrap;" />
+					</h:panelGrid>
+				</div>
+			</pe:blockUI> -->
+			</p:panel>
+
+
+		</h:form>
+	</ui:define>
+</ui:composition>
