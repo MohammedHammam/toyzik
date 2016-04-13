@@ -5,9 +5,12 @@ http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 	
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/hammambusiness"/>
+		<!-- <property name="url" value="jdbc:mysql://localhost:3306/hammambusiness"/>
 		<property name="username" value="root" />
-		<property name="password" value="Hammam123#" />
+		<property name="password" value="Hammam123#" /> -->
+		<property name="url" value="mysql://$OPENSHIFT_MYSQL_DB_HOST:$OPENSHIFT_MYSQL_DB_PORT/toyzik"/>
+		<property name="username" value="adminWMNN6QJ" />
+		<property name="password" value="XSStiv6fTtza" />
 	</bean>
 
 </beans>
